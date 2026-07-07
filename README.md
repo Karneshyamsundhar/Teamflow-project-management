@@ -7,6 +7,21 @@ TeamFlow is a high-performance, responsive full-stack SaaS application engineere
 ## 📌 Overview
 TeamFlow is a full-stack project and incident management system designed to support team collaboration, task tracking, and incident handling. The system is built using a modular monolithic architecture for simplicity, maintainability, and scalability.
 
+## 🗄️ Database Schema
+
+- Prisma schema: `/prisma/schema.prisma`
+- SQL schema: `/schema.sql`
+
+## 🔄 Migrations
+
+Run:
+
+npx prisma migrate dev --name init
+
+Seed data:
+
+npx prisma db seed
+
 
 ## 🚀 Key Features
 
@@ -143,6 +158,16 @@ Client → API → Controller → Prisma → Database → Response
 - Monolithic structure may limit scalability at very large scale
 
 ---
+## 🧠 Assumptions
+- Users must login before accessing features
+- Tasks belong to projects
+
+## ⚠️ Limitations
+- No real-time updates
+- Basic UI
+
+## 📽️ Demo Video
+https://www.loom.com/share/81bd0cb3a7ff485e89db72758e23502e
 
 ## 🚀 Future Improvements
 
@@ -150,6 +175,7 @@ Client → API → Controller → Prisma → Database → Response
 - Improve UI/UX design
 - Add microservices architecture for scalability
 - Introduce caching for performance optimization
+- 
 - 
 ## 📂 System Directory Layout
 
