@@ -4,6 +4,9 @@
 TeamFlow is a high-performance, responsive full-stack SaaS application engineered for modern engineering departments and cross-functional task planning. Adopting premium aesthetic cues from leading modern systems (such as Linear, Vercel, and Stripe), TeamFlow unifies agile board workspaces, incident response dispatchers, real-time analytics reports, secure role-based access control, and advanced user profiles under one cohesive environment.
 
 ---
+## 📌 Overview
+TeamFlow is a full-stack project and incident management system designed to support team collaboration, task tracking, and incident handling. The system is built using a modular monolithic architecture for simplicity, maintainability, and scalability.
+
 
 ## 🚀 Key Features
 
@@ -51,7 +54,103 @@ TeamFlow is a high-performance, responsive full-stack SaaS application engineere
 *   **Nodemailer**: Secure transactional mail dispatcher.
 
 ---
+## 🧩 Architecture
 
+The application follows a *Modular Monolithic Architecture*, where all components exist in a single codebase but are logically divided into independent modules.
+
+### 🔹 Layers of the System
+
+1. *Frontend Layer*
+   - Built using React and TypeScript
+   - Handles user interface and user interactions
+   - Communicates with backend via REST APIs
+
+2. *Backend Layer (API)*
+   - Built using Node.js and Express
+   - Handles HTTP requests and responses
+   - Contains controllers for business logic:
+     - Authentication
+     - Projects
+     - Tasks
+     - Incidents
+
+3. *ORM Layer*
+   - Prisma ORM is used for database interaction
+   - Provides type-safe queries
+   - Simplifies database operations
+
+4. *Database Layer*
+   - MySQL database for persistent storage
+   - Stores users, roles, projects, tasks, and incidents
+
+---
+
+## 🔄 Data Flow
+
+1. User interacts with the frontend (React)
+2. Frontend sends API request to backend (Express)
+3. Backend processes request via controllers
+4. Prisma interacts with MySQL database
+5. Response is sent back to frontend
+
+Flow:
+Client → API → Controller → Prisma → Database → Response
+
+---
+
+## 🔐 Authentication & Security
+
+- JWT (JSON Web Tokens) used for authentication
+- Passwords are hashed using bcrypt
+- Role-Based Access Control (RBAC) implemented
+- Protected routes require valid tokens
+
+---
+
+## 🧠 Design Decisions
+
+### 1. Modular Monolithic Architecture
+- Chosen for simplicity and easier deployment
+- Avoids complexity of microservices
+- Suitable for medium-scale applications
+
+### 2. Use of Prisma ORM
+- Provides type safety and cleaner queries
+- Reduces risk of SQL errors
+- Simplifies migrations and schema management
+
+### 3. REST API Design
+- Simple and widely used architecture
+- Easy integration between frontend and backend
+- Stateless communication using HTTP methods
+
+### 4. JWT Authentication
+- Enables stateless authentication
+- Scalable and secure
+- Eliminates need for server-side sessions
+
+### 5. Role-Based Access Control (RBAC)
+- Ensures proper authorization
+- Different access levels for Admin, Manager, Developer
+- Improves system security
+
+---
+
+## ⚠️ Limitations
+
+- No real-time updates (WebSockets not implemented)
+- Basic UI optimizations
+- Monolithic structure may limit scalability at very large scale
+
+---
+
+## 🚀 Future Improvements
+
+- Implement real-time features using WebSockets
+- Improve UI/UX design
+- Add microservices architecture for scalability
+- Introduce caching for performance optimization
+- 
 ## 📂 System Directory Layout
 
 ```
