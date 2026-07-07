@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  users       User[]
+
+  @@map("roles")
+}
+
+model User {
+  id                 Int             @id @default(autoincrement())
+  name               String
+  email              String          @unique
+  passwordHash       String          @map("password_hash")
+  roleId             Int             @map("role_id")
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+  assignedIncidents  Incident[]      @relation("IncidentAssignee")
+  notifications      Notification[]
+  projectMemberships ProjectMember[]
+  managedProjects    Project[]       @relation("ProjectManager")
+  createdReports     Report[]
+  assignedTasks      Task[]          @relation("TaskAssignee")
+  role               Role            @relation(fields: [roleId], references: [id])
+
+  @@index([email])
+  @@index([roleId], map: "users_role_id_fkey")
+  @@map("users")
+}
+
+model Project {
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String?         @db.Text
+  managerId   Int             @map("manager_id")
+  status      ProjectStatus   @default(Active)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  incidents   Incident[]
+  members     ProjectMember[]
+  manager     User            @relation("ProjectManager", fields: [managerId], references: [id])
+  tasks       Task[]
+
+  @@index([managerId])
+  @@map("projects")
+}
+
+model ProjectMember {
+  projectId Int      @map("project_id")
+  userId    Int      @map("user_id")
+  joinedAt  DateTime @default(now()) @map("joined_at")
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@index([userId])
+  @@map("project_members")
+}
+
+model Task {
+  id           Int              @id @default(autoincrement())
+  title        String
+  description  String?          @db.Text
+  projectId    Int              @map("project_id")
+  assigneeId   Int?             @map("assignee_id")
+  status       TaskStatus       @default(TO_DO)
+  priority     TaskPriority     @default(MEDIUM)
+  dueDate      DateTime?        @map("due_date")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  dependents   TaskDependency[] @relation("TaskBeingDependedOn")
+  dependencies TaskDependency[] @relation("TaskWithDependencies")
+  assignee     User?            @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  project      Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@map("tasks")
+}
+
+model TaskDependency {
+  taskId          Int  @map("task_id")
+  dependsOnTaskId Int  @map("depends_on_task_id")
+  dependsOnTask   Task @relation("TaskBeingDependedOn", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+  task            Task @relation("TaskWithDependencies", fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, dependsOnTaskId])
+  @@index([dependsOnTaskId], map: "task_dependencies_depends_on_task_id_fkey")
+  @@map("task_dependencies")
+}
+
+model Incident {
+  id          Int              @id @default(autoincrement())
+  title       String
+  description String           @db.Text
+  projectId   Int              @map("project_id")
+  status      IncidentStatus   @default(Open)
+  severity    IncidentSeverity @default(High)
+  assigneeId  Int?             @map("assignee_id")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  assignee    User?            @relation("IncidentAssignee", fields: [assigneeId], references: [id])
+  project     Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@map("incidents")
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int              @map("user_id")
+  title     String
+  message   String           @db.Text
+  isRead    Boolean          @default(false) @map("is_read")
+  type      NotificationType
+  createdAt DateTime         @default(now()) @map("created_at")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  title       String
+  queryParams String?  @map("query_params") @db.LongText
+  createdBy   Int      @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  creator     User     @relation(fields: [createdBy], references: [id])
+
+  @@index([createdBy])
+  @@map("reports")
+}
+
+enum ProjectStatus {
+  Active
+  Closed
+}
+
+enum TaskStatus {
+  TO_DO       @map("To Do")
+  IN_PROGRESS @map("In Progress")
+  REVIEW      @map("Review")
+  COMPLETED   @map("Completed")
+}
+
+enum TaskPriority {
+  LOW    @map("Low")
+  MEDIUM @map("Medium")
+  HIGH   @map("High")
+}
+
+enum IncidentStatus {
+  Open
+  In_Progress
+  Resolved
+  Closed
+}
+
+enum IncidentSeverity {
+  Low
+  Medium
+  High
+  Critical
+}
+
+enum NotificationType {
+  TASK_ASSIGNED     @map("Task Assigned")
+  TASK_COMPLETED    @map("Task Completed")
+  PROJECT_UPDATED   @map("Project Updated")
+  INCIDENT_ASSIGNED @map("Incident Assigned")
+}

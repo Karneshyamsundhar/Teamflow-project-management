@@ -1,0 +1,6 @@
+{
+  "name": "TeamFlow",
+  "description": "Project Management & Incident Tracking System with real-time notifications, task dependency tracking, and interactive reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
