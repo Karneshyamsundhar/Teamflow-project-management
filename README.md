@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TeamFlow — Enterprise-Grade Project & Incident Management Workspace
 
 TeamFlow is a high-performance, responsive full-stack SaaS application engineered for modern engineering departments and cross-functional task planning. Adopting premium aesthetic cues from leading modern systems (such as Linear, Vercel, and Stripe), TeamFlow unifies agile board workspaces, incident response dispatchers, real-time analytics reports, secure role-based access control, and advanced user profiles under one cohesive environment.
@@ -194,3 +195,7 @@ To bundle and deploy TeamFlow inside container clusters (such as Cloud Run or AW
     npm run start
     ```
     The Express wrapper serves static compiled assets and API endpoints simultaneously from port `3000`.
+=======
+# Teamflow-project-management
+Enterprise-grade Project ManagemenSystem built with React, TypeScript, Express.js, Prisma ORM, MySQL, JWT Authentication, and Tailwind CSS
+>>>>>>> 5342f209b64dd744e8ccd906a1adb93317d1d8a2
